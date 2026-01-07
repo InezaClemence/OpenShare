@@ -1,0 +1,54 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Review | OpenShare{% endblock %}
+
+{% block content %}
+
+  <div class="page-header">
+    <div>
+      <h1>Review: {{ resource.title }}</h1>
+      <p class="subtext">
+        Status:
+        <span class="badge badge-{{ resource.status }}">{{ resource.status }}</span>
+      </p>
+    </div>
+
+    <a class="btn-secondary" href="/reviews">Back to list</a>
+  </div>
+
+  <section class="card">
+    <h2 class="section-title">Latest version</h2>
+
+    {% if latest_version %}
+      <div class="review-block">
+        <div class="review-meta">
+          <span class="muted">v{{ latest_version.version_number }}</span>
+          <span class="dot">•</span>
+          <span class="muted">{{ latest_version.created_at }}</span>
+        </div>
+
+        <pre class="code-box">{{ latest_version.content }}</pre>
+      </div>
+    {% else %}
+      <p class="muted">No versions found.</p>
+    {% endif %}
+  </section>
+
+  <section class="card" style="margin-top:16px;">
+    <h2 class="section-title">Decision</h2>
+
+    <form method="post" class="form-page">
+      <div class="field field-full">
+        <label for="comments">Comments (optional)</label>
+        <textarea id="comments" class="input" name="comments" rows="5"
+          placeholder="Give clear feedback: what to improve, what is missing, what is strong..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" type="submit" name="decision" value="approved">Approve</button>
+        <button class="btn-secondary" type="submit" name="decision" value="changes_requested">Request changes</button>
+      </div>
+    </form>
+  </section>
+
+{% endblock %}

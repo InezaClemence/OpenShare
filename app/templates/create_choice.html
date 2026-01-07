@@ -1,0 +1,143 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Create Resource | OpenShare{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Create resource</h1>
+      <p class="subtext">Choose how you want to start creating your learning resource.</p>
+    </div>
+  </div>
+
+  <div class="choice-grid">
+
+    <!-- Option 1 -->
+    <div class="choice-card">
+      <div class="choice-icon">📝</div>
+      <h2>Start from scratch</h2>
+      <p class="muted">
+        Build a resource step-by-step. Best when you want full control from the beginning.
+      </p>
+
+
+
+<button class="btn-primary" type="button" id="openScratchModal">
+  Continue
+</button>
+
+<!-- <a href="/resources/create/builder" class="btn-primary">
+  Continue
+</a> -->  
+
+
+        <!-- 
+      <a class="btn-primary" href="/resources/new">Continue</a>
+      
+ -->
+
+    </div>
+
+    <!-- Option 2 -->
+    <div class="choice-card">
+      <div class="choice-icon">📘</div>
+      <h2>Use a template</h2>
+      <p class="muted">
+        Start with a ready structure (lesson, case study, activity). You can edit everything.
+      </p>
+      <a class="btn-secondary" href="/resources/templates">Browse templates</a>
+    </div>
+
+    <!-- Option 3 -->
+    <div class="choice-card">
+      <div class="choice-icon">🤖</div>
+      <h2>Use AI course builder</h2>
+      <p class="muted">
+        Get a first draft outline and text suggestions, then refine with collaborators.
+      </p>
+      <a class="btn-secondary" href="/resources/ai-builder">Try AI builder</a>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 18px;">
+    <a class="btn-secondary" href="/openshare-dashboard">← Back to dashboard</a>
+  </div>
+
+
+<!-- Modal backdrop -->
+<div class="os-modal-backdrop" id="scratchBackdrop" style="display:none;">
+  <div class="os-modal" role="dialog" aria-modal="true" aria-labelledby="scratchTitle">
+    <button class="os-modal-close" type="button" id="closeScratchModal">×</button>
+
+    <h2 class="os-modal-title" id="scratchTitle">Create your resource from scratch</h2>
+    <p class="os-modal-subtitle">
+      Enter a title and pick a layout. You can change it later.
+    </p>
+
+    <label class="os-label" for="courseTitle">Resource title</label>
+    <input class="input" id="courseTitle" type="text" placeholder="Enter resource title..." />
+
+    <div class="os-layout-grid">
+      <label class="os-layout-card">
+        <input type="radio" name="layout" value="multi" checked />
+        <div class="os-layout-card-inner">
+          <div class="os-layout-thumb"></div>
+          <div class="os-layout-name">Multi-page layout</div>
+          <div class="os-layout-desc">A full resource with multiple sections.</div>
+        </div>
+      </label>
+
+      <label class="os-layout-card">
+        <input type="radio" name="layout" value="single" />
+        <div class="os-layout-card-inner">
+          <div class="os-layout-thumb single"></div>
+          <div class="os-layout-name">Single-page layout</div>
+          <div class="os-layout-desc">A short, focused resource on one page.</div>
+        </div>
+      </label>
+    </div>
+
+    <button class="btn-primary full-width" type="button" id="startCreatingBtn">
+      Start creating
+    </button>
+  </div>
+</div>
+
+
+<script>
+  const openBtn = document.getElementById("openScratchModal");
+  const closeBtn = document.getElementById("closeScratchModal");
+  const backdrop = document.getElementById("scratchBackdrop");
+  const startBtn = document.getElementById("startCreatingBtn");
+
+  function openModal() { backdrop.style.display = "flex"; }
+  function closeModal() { backdrop.style.display = "none"; }
+
+  openBtn?.addEventListener("click", openModal);
+  closeBtn?.addEventListener("click", closeModal);
+
+  // close when clicking outside the modal
+  backdrop?.addEventListener("click", (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+
+  startBtn?.addEventListener("click", () => {
+    const title = document.getElementById("courseTitle").value.trim();
+    const layout = document.querySelector('input[name="layout"]:checked')?.value || "multi";
+
+    // (optional) require title
+    if (!title) {
+      alert("Please enter a resource title.");
+      return;
+    }
+
+    const url = `/resources/builder?title=${encodeURIComponent(title)}&layout=${encodeURIComponent(layout)}`;
+    window.location.href = url;
+  });
+</script>
+
+
+
+{% endblock %}
+

@@ -1,0 +1,275 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Create Resource | OpenShare{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Create resource</h1>
+      <p class="subtext">Step 1: Draft your learning resource. You can invite collaborators after saving.</p>
+    </div>
+  </div>
+
+  <form method="post" class="form-page">
+
+    <!-- SECTION 1: Resource details -->
+    <section class="card">
+      <h2 class="section-title">Resource details</h2>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" class="input" type="text" name="title" placeholder="e.g., Health Data Quality Lesson" required>
+        </div>
+
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" class="input" name="description" rows="3"
+            placeholder="A short summary so others can quickly understand the purpose."></textarea>
+        </div>
+
+        <div class="field field-full">
+          <label for="content">Content</label>
+          <textarea id="content" class="input" name="content" rows="10" required
+            placeholder="Paste the learning content, instructions, or module text here..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Author & institution -->
+    <section class="card">
+      <h2 class="section-title">Author & institution</h2>
+
+      <div class="form-grid two-col">
+        <div class="field">
+          <label for="author_name">Your name</label>
+          <input id="author_name" class="input" type="text" name="author_name" placeholder="Full name" required>
+        </div>
+
+        <div class="field">
+          <label for="author_email">Your email</label>
+          <input id="author_email" class="input" type="email" name="author_email" placeholder="name@university.edu" required>
+        </div>
+
+        <div class="field">
+          <label for="institution">Institution</label>
+          <input id="institution" class="input" type="text" name="institution" placeholder="e.g., Makerere University" required>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: License -->
+
+<div class="form-section">
+          <div class="section-title">License (Creative Commons)</div>
+
+          <div class="cc-box">
+            <div class="cc-row">
+              <span class="cc-badge">CC</span>
+              <div>
+                <div class="cc-title">Make reuse clear</div>
+                <div class="cc-sub">Choose the license that tells others how they may reuse, adapt and share your resource.</div>
+              </div>
+            </div>
+
+            <label>License</label>
+            <select class="input" name="license">
+              <option>CC BY</option>
+              <option>CC BY-SA</option>
+              <option>CC BY-NC</option>
+            </select>
+
+            <div class="cc-hint">
+              <strong>CC BY</strong> = reuse allowed with attribution.
+              <strong>CC BY-SA</strong> = reuse allowed, but shared under the same license.
+              <strong>CC BY-NC</strong> = non-commercial reuse only.
+            </div>
+          </div>
+        </div>
+
+   <!-- <section class="card license-card">
+      <h2 class="section-title">License (Creative Commons)</h2>
+      <p class="helper">
+        Your licence tells others how they may reuse or adapt your work. Authorship remains visible and credit is preserved.
+      </p>
+
+      <div class="form-grid two-col">
+        <div class="field">
+          <label for="license">Choose a licence</label>
+          <select id="license" class="input" name="license" required>
+            <option value="CC BY">CC BY — reuse with attribution</option>
+            <option value="CC BY-SA">CC BY-SA — reuse + share alike</option>
+            <option value="CC BY-NC">CC BY-NC — reuse non-commercial</option>
+          </select>
+        </div>
+      </div>
+    </section>-->
+   
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Save draft</button>
+      <!--<a href="/resources/create" class="btn-primary" type="submit">Save draft</a>-->
+
+      <a class="btn-secondary" href="/openshare-dashboard">Cancel</a>
+    </div>
+
+  </form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{# 
+{% extends "openshare_base.html" %}
+
+{% block title %}Create Resource | OpenShare{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Create resource</h1>
+    <a class="btn-secondary small" href="/openshare-dashboard">Home</a>
+  </div>
+
+  <div class="grid-2">
+    <!-- LEFT: Main form -->
+    <div class="card">
+      <form method="post" class="form">
+
+        <div class="form-section">
+          <div class="section-title">Resource details</div>
+
+          <label>Title</label>
+          <input class="input" type="text" name="title" required
+                 placeholder="e.g., Health Data Quality Lesson">
+
+          <label>Description</label>
+          <textarea class="input" name="description" rows="3"
+                    placeholder="A short summary so others can quickly understand the purpose…"></textarea>
+
+          <label>Content</label>
+          <textarea class="input" name="content" rows="10" required
+                    placeholder="Paste the learning content, instructions, or module text here…"></textarea>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title">Author & institution</div>
+
+          <div class="row-2">
+            <div>
+              <label>Your name</label>
+              <input class="input" type="text" name="author_name" required placeholder="Full name">
+            </div>
+            <div>
+              <label>Your email</label>
+              <input class="input" type="email" name="author_email" required placeholder="name@university.edu">
+            </div>
+          </div>
+
+          <label>Institution</label>
+          <input class="input" type="text" name="institution" required placeholder="e.g., Makerere University">
+        </div>
+
+        <div class="form-section">
+          <div class="section-title">License (Creative Commons)</div>
+
+          <div class="cc-box">
+            <div class="cc-row">
+              <span class="cc-badge">CC</span>
+              <div>
+                <div class="cc-title">Make reuse clear</div>
+                <div class="cc-sub">Choose the license that controls how others can adapt and share your resource.</div>
+              </div>
+            </div>
+
+            <label>License</label>
+            <select class="input" name="license">
+              <option>CC BY</option>
+              <option>CC BY-SA</option>
+              <option>CC BY-NC</option>
+            </select>
+
+            <div class="cc-hint">
+              <strong>CC BY</strong> = reuse allowed with attribution.
+              <strong>CC BY-SA</strong> = reuse allowed, but shared under the same license.
+              <strong>CC BY-NC</strong> = non-commercial reuse only.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" type="submit">Save as draft</button>
+          <a class="btn-secondary small" href="/resources">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- RIGHT: Collaborator invite (UI first) -->
+    <div class="card">
+      <div class="section-title">Invite collaborator</div>
+      <p class="muted">
+        Invite a colleague from another university to co-create this resource. They can contribute new versions after you save the draft.
+      </p>
+
+      <label>Collaborator email</label>
+      <input class="input" type="email" name="collab_email_ui" placeholder="colleague@university.edu">
+
+      <label>Message (optional)</label>
+      <textarea class="input" name="collab_msg_ui" rows="4"
+                placeholder="Hi! I’m drafting a resource and would love your input on…"></textarea>
+
+      <button class="btn-primary full-width" type="button">Send invite</button>
+
+      <div class="divider"></div>
+
+      <div class="section-title">Flow</div>
+      <ol class="mini-steps">
+        <li>Save draft</li>
+        <li>Invite collaborator</li>
+        <li>Co-create versions</li>
+        <li>Submit for review</li>
+        <li>Approved → LMS link</li>
+      </ol>
+    </div>
+  </div>
+{% endblock %}
+
+#}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Resources | OpenShare{% endblock %}
+
+{% block content %}
+
+  <div class="page-header">
+    <div>
+      <h1>All Resources</h1>
+      <p class="subtext">Browse, search, and open resource details.</p>
+    </div>
+
+    
+  </div>
+
+  <section class="card">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="resourceSearch" class="input search-input" type="text" placeholder="Search resources…">
+      </div>
+
+      <div class="muted small" id="resultCount">
+        {{ resources|length }} resources
+      </div>
+    </div>
+
+    <div class="resource-list" id="resourceList">
+      {% if resources and resources|length > 0 %}
+        {% for r in resources %}
+          <a class="resource-row" href="/resources/{{ r.id }}">
+            <div class="resource-main">
+              <div class="resource-title">{{ r.title }}</div>
+              <div class="resource-meta">
+                <span class="badge badge-{{ r.status }}">{{ r.status }}</span>
+                <span class="dot">•</span>
+                <span class="muted">{{ r.created_at }}</span>
+              </div>
+
+              {% if r.description %}
+                <div class="resource-desc">{{ r.description }}</div>
+              {% else %}
+                <div class="resource-desc muted">No description</div>
+              {% endif %}
+            </div>
+
+            <div class="resource-cta">
+              <span class="btn-secondary small">More details</span>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        <p class="muted">No resources found yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <script>
+    // Simple client-side filter (no backend change needed)
+    const input = document.getElementById("resourceSearch");
+    const list = document.getElementById("resourceList");
+    const count = document.getElementById("resultCount");
+
+    function updateCount() {
+      const rows = Array.from(list.querySelectorAll(".resource-row"));
+      const visible = rows.filter(r => r.style.display !== "none").length;
+      count.textContent = visible + " resources";
+    }
+
+    if (input) {
+      input.addEventListener("input", () => {
+        const q = input.value.toLowerCase().trim();
+        const rows = list.querySelectorAll(".resource-row");
+        rows.forEach(row => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(q) ? "" : "none";
+        });
+        updateCount();
+      });
+    }
+  </script>
+
+{% endblock %}

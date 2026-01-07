@@ -1,0 +1,65 @@
+{% extends "openshare_base.html" %}
+
+{% block content %}
+  <div class="page-header">
+    <h1> Get started </h1>
+    <input class="search-input" placeholder="Search resources">
+  </div>
+<p> Welcome. This is the starting page. (Soon add the guide, a suggestion from the test participants.)</p>
+  <ul>
+    <li><a href="/resources/new">Create a new resource</a></li>
+   
+  </ul>
+
+
+  <section class="card-list">
+
+     <!-- Create resource 
+    <article class="course-card">
+      <div class="card-thumb"></div>
+      <div class="card-body">
+        <h2 class="card-title">Create a new resource</h2>
+        <p class="card-meta">Upload and share learning materials.</p>
+        <a class="btn-secondary small" href="/resources/new">Open</a>
+      </div>
+    </article>
+
+   View all resources 
+    <article class="course-card">
+      <div class="card-thumb"></div>
+      <div class="card-body">
+        <h2 class="card-title">View all resources</h2>
+        <p class="card-meta">Browse shared resources.</p>
+        <a class="btn-secondary small" href="/resources">Open</a>
+      </div>
+    </article>
+
+   Resources under review 
+    <article class="course-card">
+      <div class="card-thumb"></div>
+      <div class="card-body">
+        <h2 class="card-title">Resources under review</h2>
+        <p class="card-meta">See pending reviews.</p>
+        <a class="btn-secondary small" href="/reviews">Open</a>
+      </div>
+    </article>-->
+
+  </section>
+  <!--
+  <section class="card-list">
+    {% for r in resources %}
+      <article class="course-card">
+        <div class="card-thumb"></div>
+        <div class="card-body">
+          <h2 class="card-title">{{ r.title }}</h2>
+          <p class="card-meta">Modified: {{ r.modified }}</p>
+          <button class="btn-secondary small">More details</button>
+
+
+        </div>
+        <div class="card-menu">⋯</div>
+      </article> 
+
+    {% endfor %}
+  </section>-->
+{% endblock %}

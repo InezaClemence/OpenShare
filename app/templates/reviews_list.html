@@ -1,0 +1,32 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Reviews | OpenShare{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Resources awaiting review</h1>
+  </div>
+
+  <section class="card-list">
+    {% for r in resources %}
+      <article class="course-card">
+        <div class="card-thumb"></div>
+
+        <div class="card-body">
+          <h2 class="card-title">{{ r.title }}</h2>
+          <p class="card-meta">Pending review</p>
+
+          <a class="btn-secondary small" href="/reviews/{{ r.id }}">
+            View review
+          </a>
+        </div>
+
+        <div class="card-menu">⋯</div>
+      </article>
+    {% endfor %}
+  </section>
+
+  {% if resources|length == 0 %}
+    <p class="card-meta">No resources awaiting review.</p>
+  {% endif %}
+{% endblock %}

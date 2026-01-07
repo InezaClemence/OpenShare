@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OpenShare – LMS Launch</title>
+</head>
+<body>
+  <h1>OpenShare</h1>
+  <p>This is the OpenShare home page when launched from an LMS (like Moodle).</p>
+
+  <h2>What you can do</h2>
+  <ul>
+    <li><a href="/resources/new" target="_blank">Create a new shared resource</a></li>
+    <li><a href="/resources" target="_blank">View all resources in OpenShare</a></li>
+  </ul>
+
+  <h2>Existing resources</h2>
+  {% if resources %}
+    <ul>
+      {% for r in resources %}
+        <li>
+          <strong>{{ r.title }}</strong>
+          — {{ r.status }}
+          — {{ r.license }}
+          — <a href="/resources/{{ r.id }}" target="_blank">Open in OpenShare</a>
+          {% if r.status == 'approved' %}
+            — <a href="/lti/{{ r.id }}" target="_blank">Open LMS view</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No resources yet. Use the links above to create one.</p>
+  {% endif %}
+</body>
+</html>

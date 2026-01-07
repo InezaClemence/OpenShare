@@ -1,0 +1,115 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}{{ resource.title }} | OpenShare{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>{{ resource.title }}</h1>
+  </div>
+
+  <div class="card">
+    <p><strong>Description:</strong> {{ resource.description }}</p>
+    <p><strong>Status:</strong> {{ resource.status }}</p>
+    <p><strong>License:</strong> {{ resource.license }}</p>
+    <p>
+      <strong>Created by:</strong>
+      {{ resource.created_by.name }} ({{ resource.created_by.institution }})
+    </p>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <h2>Versions</h2>
+
+    {% if resource.versions %}
+      <ul>
+        {% for v in resource.versions %}
+          <li style="margin-bottom: 12px;">
+            <strong>v{{ v.version_number }}</strong>
+            by {{ v.created_by.name }}
+            on {{ v.created_at }}
+            <pre style="margin-top: 6px;">{{ v.content }}</pre>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="card-meta">No versions available.</p>
+    {% endif %}
+  </div>
+
+  {% if resource.status == 'draft' %}
+    <div class="card" style="margin-top: 16px;">
+      <form method="post" action="/resources/{{ resource.id }}/submit-review">
+        <button class="btn-primary" type="submit">
+          Submit for review
+        </button>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if resource.status == 'approved' %}
+    <div class="card" style="margin-top: 16px;">
+      <h3>LMS Link</h3>
+      <form method="post" action="/resources/{{ resource.id }}/generate-link">
+        <button class="btn-primary" type="submit">
+          Generate / View LMS link
+        </button>
+      </form>
+    </div>
+  {% endif %}
+
+  <section class="card">
+  <h2 class="section-title">Invite collaborator</h2>
+  <p class="helper">Invite a colleague to co-create this resource. Their invite will be saved as <b>pending</b>.</p>
+
+  <form method="post" action="/resources/{{ resource.id }}/invite">
+    <div class="form-grid two-col">
+      <div class="field">
+        <label>Collaborator email</label>
+        <input class="input" type="email" name="collaborator_email" placeholder="colleague@university.edu" required>
+      </div>
+
+      <div class="field field-full">
+        <label>Message (optional)</label>
+        <textarea class="input" name="message" rows="4"
+          placeholder="Hi! I created a draft resource on OpenShare and would love your input..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Send invite</button>
+      <a class="btn-secondary" href="/openshare-dashboard">Home</a>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h2 class="section-title">Invited collaborators</h2>
+
+  {% if invites and invites|length > 0 %}
+    <ul class="simple-list">
+      {% for i in invites %}
+        <li>
+          <b>{{ i.collaborator_email }}</b>
+          <span class="badge">{{ i.status }}</span>
+          <div class="muted small">Invited: {{ i.created_at }}</div>
+          {% if i.message %}
+            <div class="muted small">Message: {{ i.message }}</div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No invites yet.</p>
+  {% endif %}
+</section>
+
+
+  <div style="margin-top: 20px;">
+    <a class="btn-secondary small" href="/resources">
+      ← Back to resources
+    </a>
+    <a class="btn-secondary small" href="/openshare-dashboard">
+      Home
+    </a>
+  </div>
+{% endblock %}

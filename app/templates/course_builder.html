@@ -1,0 +1,306 @@
+{% extends "openshare_base.html" %}
+
+{% block title %}Course Builder | OpenShare{% endblock %}
+
+{% block content %}
+
+<div class="builder-page">
+
+  <!-- HEADER -->
+  <div class="builder-header">
+    <div>
+      <h1 class="builder-title">{{ title or "Untitled resource" }}</h1>
+      <div class="builder-sub">
+        <span>Layout: {{ layout }}</span>
+         <!--<span class="dot">•</span>-->
+        <span class="muted">Draft</span>
+        <!--<span class="dot">•</span>-->
+        <span class="muted" id="saveStatus">Not saved</span>
+      </div>
+    </div>
+
+    <div class="builder-header-actions">
+       <button class="btn-secondary small" type="button">Preview</button>
+    <button class="btn-secondary small" type="button" id="inviteBtn">Invite</button>
+      <button class="btn-secondary small" type="button" id="togglePropsBtn">
+        Properties ▾
+      </button>
+    </div>
+  </div>
+
+  <aside class="builder-right">
+    <div class="tabs">
+    
+      <button type="button" class="tab" data-tab="collab">Collaborators</button>
+      <button type="button" class="tab" data-tab="comments">Comments</button>
+    </div>
+
+  <!-- 3-COLUMN LAYOUT -->
+  <div class="builder-grid">
+
+    <!-- LEFT: COURSE OUTLINE -->
+    <aside class="builder-left card">
+      <div class="panel-title">Course outline</div>
+
+      <ul class="outline-list" id="outlineList">
+        <li class="outline-item active" data-section="Introduction">Introduction</li>
+        <li class="outline-item" data-section="Section 1">Section 1</li>
+        <li class="outline-item" data-section="Section 2">Section 2</li>
+      </ul>
+
+      <button class="btn-secondary small full-width" type="button" id="addSectionBtn">
+        + Add section
+      </button>
+    </aside>
+
+    <!-- CENTER: BUILDER CANVAS -->
+    <main class="builder-center card">
+      <div class="section-head">
+        <h2 class="section-title" id="sectionTitle">Introduction</h2>
+        <button class="btn-secondary small" type="button" id="addContentBtn">
+          + Add content
+        </button>
+      </div>
+
+      <!-- Learning objective quick field -->
+      <div class="block">
+        <div class="block-label">Learning objective</div>
+        <input class="input" id="objectiveInput" placeholder="Learners will be able to..." />
+      </div>
+
+      <!-- Content blocks container -->
+      <div id="blocksContainer">
+
+        <!-- Default Text block -->
+        <div class="block" data-type="text">
+          <div class="block-top">
+            <div class="block-title">Text</div>
+            <button class="icon-btn" type="button" title="Remove" data-action="remove-block">✕</button>
+          </div>
+          <textarea class="input block-textarea" placeholder="Write your text here..."></textarea>
+        </div>
+
+      </div>
+
+      <div class="builder-actions">
+        <button class="btn-primary" type="button" id="saveBtn">Save</button>
+        <a class="btn-secondary" href="/openshare-dashboard">Exit</a>
+      </div>
+    </main>
+
+    <!-- RIGHT: PROPERTIES (COLLAPSIBLE) -->
+    <aside class="builder-right card" id="propsPanel">
+      <div class="panel-title-row">
+
+        <div class="panel-title">Properties</div>
+        <button class="icon-btn" type="button" id="closePropsBtn" title="Hide">▸</button>
+      </div>
+
+      <div class="field">
+        <label>Title</label>
+        <input class="input" id="propTitle" value="{{ title or 'Untitled resource' }}" />
+      </div>
+
+      <div class="field">
+        <label>License</label>
+        <select class="input" id="propLicense">
+          <option value="CC BY" selected>CC BY</option>
+          <option value="CC BY-SA">CC BY-SA</option>
+          <option value="CC BY-NC">CC BY-NC</option>
+        </select>
+        <div class="muted small" style="margin-top:8px; line-height:1.5;">
+          <b>CC BY</b> = reuse with attribution.<br>
+          <b>CC BY-SA</b> = share alike.<br>
+          <b>CC BY-NC</b> = non-commercial.
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Tags</label>
+        <input class="input" id="propTags" placeholder="e.g., immunisation, cold chain" />
+      </div>
+
+      <div class="field">
+        <label>Visibility</label>
+        <select class="input" id="propVisibility">
+          <option value="draft" selected>Draft</option>
+          <option value="in_review">In review</option>
+          <option value="approved">Approved</option>
+        </select>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<!-- ADD CONTENT MODAL -->
+<div class="modal-backdrop" id="contentModal" style="display:none;">
+  <div class="modal card">
+    <div class="modal-head">
+      <div class="modal-title">Add content block</div>
+      <button class="icon-btn" type="button" id="closeModalBtn">✕</button>
+    </div>
+
+    <div class="modal-list">
+      <button class="modal-item" type="button" data-add="text">Text</button>
+      <button class="modal-item" type="button" data-add="objective">Learning objective</button>
+     <label class="modal-item">
+  Upload Image
+  <input type="file" name="image" accept="image/*" hidden>
+</label>
+
+<label class="modal-item">
+  Upload Video
+  <input type="file" name="video" accept="video/*" hidden>
+</label>
+
+      <button class="modal-item" type="button" data-add="single_choice">Question (single choice)</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" type="button" id="closeModalBottomBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== Outline switching (UI only)
+  const outlineList = document.getElementById("outlineList");
+  const sectionTitle = document.getElementById("sectionTitle");
+  outlineList.addEventListener("click", (e) => {
+    const item = e.target.closest(".outline-item");
+    if (!item) return;
+    document.querySelectorAll(".outline-item").forEach(i => i.classList.remove("active"));
+    item.classList.add("active");
+    sectionTitle.textContent = item.dataset.section;
+    document.getElementById("saveStatus").textContent = "Not saved";
+  });
+
+  // ===== Properties panel toggle
+  const propsPanel = document.getElementById("propsPanel");
+  const togglePropsBtn = document.getElementById("togglePropsBtn");
+  const closePropsBtn = document.getElementById("closePropsBtn");
+
+  function hideProps(){ propsPanel.classList.add("hidden"); }
+  function showProps(){ propsPanel.classList.remove("hidden"); }
+
+  togglePropsBtn.addEventListener("click", () => {
+    propsPanel.classList.toggle("hidden");
+  });
+  closePropsBtn.addEventListener("click", hideProps);
+
+  // ===== Modal open/close
+  const contentModal = document.getElementById("contentModal");
+  const addContentBtn = document.getElementById("addContentBtn");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const closeModalBottomBtn = document.getElementById("closeModalBottomBtn");
+
+  function openModal(){ contentModal.style.display = "flex"; }
+  function closeModal(){ contentModal.style.display = "none"; }
+
+  addContentBtn.addEventListener("click", openModal);
+  closeModalBtn.addEventListener("click", closeModal);
+  closeModalBottomBtn.addEventListener("click", closeModal);
+  contentModal.addEventListener("click", (e) => { if (e.target === contentModal) closeModal(); });
+
+  // ===== Add blocks
+  const blocksContainer = document.getElementById("blocksContainer");
+
+  function blockWrapper(title, innerHtml){
+    const div = document.createElement("div");
+    div.className = "block";
+    div.innerHTML = `
+      <div class="block-top">
+        <div class="block-title">${title}</div>
+        <button class="icon-btn" type="button" title="Remove" data-action="remove-block">✕</button>
+      </div>
+      ${innerHtml}
+    `;
+    return div;
+  }
+
+  contentModal.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-add]");
+    if (!btn) return;
+
+    const type = btn.dataset.add;
+
+    if (type === "text") {
+      blocksContainer.appendChild(
+        blockWrapper("Text", `<textarea class="input block-textarea" placeholder="Write your text here..."></textarea>`)
+      );
+    }
+
+    if (type === "objective") {
+      blocksContainer.appendChild(
+        blockWrapper("Learning objective", `<input class="input" placeholder="Learners will be able to..." />`)
+      );
+    }
+
+    if (type === "image") {
+      blocksContainer.appendChild(
+        blockWrapper("Image (URL)", `<input class="input" placeholder="https://... (image url)" />`)
+      );
+    }
+
+    if (type === "video") {
+      blocksContainer.appendChild(
+        blockWrapper("Video (URL)", `<input class="input" placeholder="https://... (video url)" />`)
+      );
+    }
+
+    if (type === "single_choice") {
+      blocksContainer.appendChild(
+        blockWrapper("Question (single choice)", `
+          <input class="input" placeholder="Question title..." style="margin-bottom:10px;" />
+          <div class="choice-list">
+            <div class="choice-row"><input class="input" placeholder="Choice 1" /></div>
+            <div class="choice-row"><input class="input" placeholder="Choice 2" /></div>
+            <button class="btn-secondary small" type="button" data-action="add-choice">+ Add choice</button>
+          </div>
+        `)
+      );
+    }
+
+    document.getElementById("saveStatus").textContent = "Not saved";
+    closeModal();
+  });
+
+  // ===== Remove block / Add choice
+  blocksContainer.addEventListener("click", (e) => {
+    const removeBtn = e.target.closest('[data-action="remove-block"]');
+    if (removeBtn) {
+      removeBtn.closest(".block").remove();
+      document.getElementById("saveStatus").textContent = "Not saved";
+      return;
+    }
+
+    const addChoiceBtn = e.target.closest('[data-action="add-choice"]');
+    if (addChoiceBtn) {
+      const list = addChoiceBtn.closest(".choice-list");
+      const row = document.createElement("div");
+      row.className = "choice-row";
+      row.innerHTML = `<input class="input" placeholder="New choice" />`;
+      list.insertBefore(row, addChoiceBtn);
+      document.getElementById("saveStatus").textContent = "Not saved";
+    }
+  });
+
+  // ===== Fake Save (UI only for now)
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    document.getElementById("saveStatus").textContent = "Saved";
+  });
+
+  // ===== Add section (UI only)
+  document.getElementById("addSectionBtn").addEventListener("click", () => {
+    const name = prompt("Section name?");
+    if (!name) return;
+    const li = document.createElement("li");
+    li.className = "outline-item";
+    li.dataset.section = name;
+    li.textContent = name;
+    outlineList.appendChild(li);
+  });
+</script>
+
+{% endblock %}

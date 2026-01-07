@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ resource.title }}</title></head>
+<body>
+  <h1>{{ resource.title }}</h1>
+  <p><strong>License:</strong> {{ resource.license }}</p>
+  <p><strong>Author:</strong> {{ resource.created_by.name }} ({{ resource.created_by.institution }})</p>
+  <hr>
+  <pre>{{ version.content }}</pre>
+</body>
+</html>
